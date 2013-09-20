@@ -43,14 +43,24 @@ nextGuess' record result = (newGuess,(newGuess:(fst.snd) record, result) )
 -- possibleTargetsUnderResult result gameState =   
 
 allCombinations:: [String] -> (Int,Int,Int) -> [[String]]
-allCombinations strList intTuple | trace ("-- Debug: allCominations " ++ show strList ++ " " ++ show intTuple) False = undefined
-allCombinations strList intTuple = [ xs | xs<-combinations, ys<-combinations,(all ( `elem` ys) xs ) == False ]
+--allCombinations strList intTuple | trace ("-- Debug: allCominations " ++ show strList ++ " " ++ show intTuple) False = undefined
+allCombinations strList intTuple = removeDuplicates combinations
+	           --[ xs | xs<-combinations, ys<-combinations,(all ( `elem` ys) xs ) == False ]
+	           --[ xs | xs<-combinations, ys<-combinations,(all ( `elem` ys) xs ) == False ]
+	           --filter ((all (`elem` ys) xs ) == True) combinations             
          where intList = (first intTuple):(second intTuple):(third intTuple):[]
                first (x,_,_) = x
                second(_,y,_) = y
                third (_,_,z) = z               
                tempList = [ (x ++ (show n))| x <- strList,n <- intList]
                combinations =  [a:b:c:[] | a<-tempList,b<-tempList,c<-tempList, a/=b,b/=c, a/=c ]
+
+removeDuplicates :: [[String]] ->[[String]]
+-- removeDuplicates originalList | trace ("--Debug: removeDuplicates: " ++ show originalList) False = undefined
+removeDuplicates [] = []
+removeDuplicates originalList = if any ( `elem`  (permutations.head) originalList)  (tail originalList)   
+                                  then (removeDuplicates.tail) originalList
+                                  else  (head originalList):((removeDuplicates.tail) originalList)
 
 
 testMethod::IO ()
