@@ -7,6 +7,7 @@ module MusicMind
 (initialGuess
 ,nextGuess
 ,GameState
+,allCombinations
 ) where
 
 import Data.List
@@ -58,11 +59,12 @@ updateGameState record result = if checkConsistency (fst record) ((head.snd) rec
 
 	
 -- |  If a given element in the targets list is consistent with the result,then return True.
+--    @para 0 : last guess. @para 1 : an element in the remaing list. @para 2: result 
 checkConsistency:: [String] -> [String] -> (Int,Int,Int) -> Bool
-checkConsistency lastGuess element lastResult = if (pitch,note,oct) == lastResult then True else False
-	     where pitch = 3 - (length  distinctElement)
-	           note  = (length  distinctElement) - (length  ([head x | x<-distinctElement]\\[head y| y<-distinctLastResult ]))
-	           oct   = (length  distinctElement) - (length  ([last x | x<-distinctElement]\\[last y| y<-distinctLastResult ]))
-	           distinctElement    = element\\lastGuess
-	           distinctLastResult = lastGuess\\element
+checkConsistency lastGuess element result = if (pitch,note,oct) == result then True else False
+	     where pitch = 3 - (length  diffPitchList)
+	           note  = (length  diffPitchList) - (length  ([head x | x<-diffPitchList]\\[head y| y<-notYetPitchList ]))
+	           oct   = (length  diffPitchList) - (length  ([last x | x<-diffPitchList]\\[last y| y<-notYetPitchList ]))
+	           diffPitchList  = element\\lastGuess
+	           notYetPitchList = lastGuess\\element
                       
