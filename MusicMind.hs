@@ -30,7 +30,7 @@ initialGuess = (["A1","B2","C3"],targetsList)
 nextGuess :: ([String],GameState) -> (Int,Int,Int) -> ([String],GameState)
 --nextGuess record result | trace ("-- Debug: nextGuess' " ++ show record ++ " " ++ show result) False = undefined
 nextGuess record result = (newGuess, newGameState) 
-           where newGuess = head newGameState --FIX ME: use a smart function instead of just using head function.
+           where newGuess = last newGameState  --FIX ME: use a smart function instead of just using head function.
                  newGameState = updateGameState record result
 
 -- |Helper functions. |Private
@@ -60,6 +60,7 @@ removeDuplicates originalList = if any ( `elem`  (permutations.head) originalLis
 -- Input GameState and result, output a new GameState.
 updateGameState:: ([String],GameState) -> (Int,Int,Int) -> GameState
 --updateGameState record result | trace ("-- Debug: nextGuess' " ++ show record ++ " " ++ show result) False = undefined
+updateGameState ([_,_,_],[]) (_,_,_) = []
 updateGameState record result = if checkConsistency (fst record) ((head.snd) record) result  
                                    then ((head.snd) record):(updateGameState (fst record,(tail.snd) record) result)
  	                               else updateGameState (fst record,(tail.snd) record) result
