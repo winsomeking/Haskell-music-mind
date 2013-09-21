@@ -7,6 +7,7 @@ module MusicMind
 ,nextGuess
 ,GameState
 ,testMethod
+,allCombinations
 ) where
 
 -- |Debugging packages
