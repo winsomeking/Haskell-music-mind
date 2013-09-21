@@ -10,8 +10,7 @@ module MusicMind
 ) where
 
 -- |Debugging packages
-import Debug.Hood.Observe
-import Debug.Trace
+--import Debug.Trace
 import Data.List
 	
 -- |fst GameState is a list of all previous guesses.snd GameState is the result of previous guess.	
