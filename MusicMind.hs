@@ -33,7 +33,7 @@ nextGuess :: ([String],GameState) -> (Int,Int,Int) -> ([String],GameState)
 -- |FIX ME: Change the newGuess object.
 -- Result cannot be (3,0,0), since if successfully guessed the target, then this method will not be called.
 nextGuess record result = (newGuess, newGameState) 
-           where newGuess = head newGameState
+           where newGuess = head newGameState --FIX ME: use a smart function instead of just using head function.
                  newGameState = updateGameState record result
 
 -- |Helper functions. |Private
@@ -65,22 +65,21 @@ removeDuplicates originalList = if any ( `elem`  (permutations.head) originalLis
 updateGameState:: ([String],GameState) -> (Int,Int,Int) -> GameState
 --updateGameState record result | trace ("-- Debug: nextGuess' " ++ show record ++ " " ++ show result) False = undefined
 --updateGameState ([_,_,_],[]) (_,_,_) = [[]]
-updateGameState record result = (tail.snd) record
-	                            -- if checkConsistency (fst record) ((head.snd) record) result  
---                                    then ((head.snd) record):(updateGameState (fst record,(tail.snd) record) result)
--- 	                               else updateGameState (fst record,(tail.snd) record) result
+updateGameState record result = if checkConsistency (fst record) ((head.snd) record) result  
+                                   then ((head.snd) record):(updateGameState (fst record,(tail.snd) record) result)
+ 	                               else updateGameState (fst record,(tail.snd) record) result
 	
 	
 checkConsistency:: [String] -> [String] -> (Int,Int,Int) -> Bool
-checkConsistency lastGuess element lastResult = False
--- checkConsistency lastGuess element lastResult = if (pitch,note,oct) == lastResult
--- 	                								then True
--- 	                                                else False
--- 	           where pitch = 3 - (length  distinctElement)
--- 	                 note  = if (length distinctElement /= 0) then 1  else 0 
--- 	                 oct   = if (length distinctElement /= 0) then 1  else 0 
--- 	                 distinctElement    = element\\lastGuess
--- 	                 distinctLastResult = lastGuess\\element
+-- Used in brute force -- checkConsistency lastGuess element lastResult = False
+checkConsistency lastGuess element lastResult = if (pitch,note,oct) == lastResult
+	                								then True
+	                                                else False
+	           where pitch = 3 - (length  distinctElement)
+	                 note  = (length  distinctElement) - (length  ([head x | x<-distinctElement]\\[head y| y<-distinctLastResult ] ))
+	                 oct   = (length  distinctElement) - (length  ([last x | x<-distinctElement]\\[last y| y<-distinctLastResult ]))
+	                 distinctElement    = element\\lastGuess
+	                 distinctLastResult = lastGuess\\element
 
 
 
