@@ -25,15 +25,15 @@ initialGuess = (["A1","B1","C2"],targetsList)
            where targetsList = allCombinations ["A","B","C","D","E","F","G"] (1,2,3)
 
 -- |Debug code.
-nextGuess = observe "Arguments for nextGuess' " nextGuess'
+--nextGuess = observe "Arguments for nextGuess' " nextGuess'
 
 nextGuess :: ([String],GameState) -> (Int,Int,Int) -> ([String],GameState)
 -- |Debug code. Trace the input value of arguments
-nextGuess record result | trace ("-- Debug: nextGuess' " ++ show record ++ " " ++ show result) False = undefined
+--nextGuess record result | trace ("-- Debug: nextGuess' " ++ show record ++ " " ++ show result) False = undefined
 -- |FIX ME: Change the newGuess object.
 -- Result cannot be (3,0,0), since if successfully guessed the target, then this method will not be called.
 nextGuess record result = (newGuess, newGameState) 
-           where newGuess = ["A1","B1","C3"]
+           where newGuess = head newGameState
                  newGameState = updateGameState record result
 
 -- |Helper functions. |Private
@@ -63,20 +63,24 @@ removeDuplicates originalList = if any ( `elem`  (permutations.head) originalLis
 -- | Remove those targets that are inconsistent with the result from the targets list.
 -- Input GameState and result, output a new GameState.
 updateGameState:: ([String],GameState) -> (Int,Int,Int) -> GameState
-updateGameState record result = if checkConsistency (fst record) (head GameState) result  
-                                   then (head GameState):(updateGameState (fst record,tail GameState) result):[]
-	                               else (updateGameState (fst record,tail GameState) result):[]
+--updateGameState record result | trace ("-- Debug: nextGuess' " ++ show record ++ " " ++ show result) False = undefined
+--updateGameState ([_,_,_],[]) (_,_,_) = [[]]
+updateGameState record result = (tail.snd) record
+	                            -- if checkConsistency (fst record) ((head.snd) record) result  
+--                                    then ((head.snd) record):(updateGameState (fst record,(tail.snd) record) result)
+-- 	                               else updateGameState (fst record,(tail.snd) record) result
 	
 	
 checkConsistency:: [String] -> [String] -> (Int,Int,Int) -> Bool
-checkConsistency lastGuess element lastResult = if (pitch,note,oct) == lastResult
-	                								then True
-	                                                else False
-	           where pitch = 3 - (length  distinctElement)
-		             note  = if (length distinctElement /= 0) then   else 0 
-			         oct   = if (length distinctElement /= 0) then   else 0 
-                     distinctElement    = element\\lastResult     
-                     distinctLastResult = lastResult\\element
+checkConsistency lastGuess element lastResult = False
+-- checkConsistency lastGuess element lastResult = if (pitch,note,oct) == lastResult
+-- 	                								then True
+-- 	                                                else False
+-- 	           where pitch = 3 - (length  distinctElement)
+-- 	                 note  = if (length distinctElement /= 0) then 1  else 0 
+-- 	                 oct   = if (length distinctElement /= 0) then 1  else 0 
+-- 	                 distinctElement    = element\\lastGuess
+-- 	                 distinctLastResult = lastGuess\\element
 
 
 
