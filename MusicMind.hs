@@ -6,7 +6,6 @@ module MusicMind
 (initialGuess
 ,nextGuess
 ,GameState
-,testMethod
 ,allCombinations
 ) where
 
@@ -65,7 +64,7 @@ updateGameState record result = if checkConsistency (fst record) ((head.snd) rec
                                    then ((head.snd) record):(updateGameState (fst record,(tail.snd) record) result)
  	                               else updateGameState (fst record,(tail.snd) record) result
 	
--- | If a given element in the possible targets list is consistent with the result,then return True.
+-- | If a given element in the targets list is consistent with the result,then return True.
 checkConsistency:: [String] -> [String] -> (Int,Int,Int) -> Bool
 checkConsistency lastGuess element lastResult = if (pitch,note,oct) == lastResult then True else False
 	           where pitch = 3 - (length  distinctElement)
@@ -74,18 +73,3 @@ checkConsistency lastGuess element lastResult = if (pitch,note,oct) == lastResul
 	                 distinctElement    = element\\lastGuess
 	                 distinctLastResult = lastGuess\\element
                       
-
-
- 	
-		
-		
-
-
-
-testMethod::IO ()
-testMethod = putStrLn $ (fst initialGuess) !! 0 ++ (fst initialGuess) !! 1 ++ (fst initialGuess) !! 2 
-
-
---nextGuess :: ([String],GameState) -> (Int,Int,Int) -> ([String],GameState)	
-
-

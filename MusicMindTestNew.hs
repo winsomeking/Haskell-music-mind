@@ -10,6 +10,7 @@ import Data.List
 import System.Environment
 import System.Exit
 import MusicMind
+import Debug.Trace
 
 -- | Compute the correct answer to a guess.  First argument is the 
 --   target, second is the guess.
@@ -78,6 +79,7 @@ loop target guess other guesses =  if answer == (3,0,0)
                               answer = response target guess
 
 calculateAverageGuess:: Int -> [[String]] -> Int
+calculateAverageGuess previousNum combinations | trace ("-- Debug: previous num of guess: " ++ show previousNum ++ " : " ++ (show.head) combinations ++ (show.length) combinations) False = undefined
 calculateAverageGuess previousNum combinations
 	                | length combinations == 1  = (previousNum + (loop (head combinations) guess other 1))
 	                | otherwise                 = calculateAverageGuess (previousNum + (loop (head combinations) guess other 1)) (drop 1 combinations)
