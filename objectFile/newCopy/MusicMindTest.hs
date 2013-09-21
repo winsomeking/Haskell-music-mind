@@ -10,7 +10,6 @@ import Data.List
 import System.Environment
 import System.Exit
 import MusicMind
-import Debug.Trace
 
 -- | Compute the correct answer to a guess.  First argument is the 
 --   target, second is the guess.
@@ -60,29 +59,25 @@ main = do
   let target = args
   let test = head args
   if length args == 3 && validChord target then do
-    --let (guess,other) = initialGuess
-    --loop target guess other 1
-    let combinations = allCombinations ["A","B","C","D","E","F","G"] (1,2,3)
-    let average = calculateAverageGuess 0 combinations
-    putStrLn $ "You got it in on average: " ++ show average ++ " guesses!"
+    let (guess,other) = initialGuess
+    loop target guess other 1
     else do
     putStrLn "Usage:  musicmind p1 p2 p3"
     putStrLn "   where p1 p2 p3 are 3 different pitches between A1 and G3"
     exitFailure
 
 
-loop :: [String] -> [String] -> MusicMind.GameState -> Int -> Int --IO ()
-loop target guess other guesses =  if answer == (3,0,0)  
-	                               then guesses
-                                   else loop target guess' other' (guesses+1)
-                        where (guess',other') = nextGuess (guess,other) answer 
-                              answer = response target guess
-
-calculateAverageGuess:: Int -> [[String]] -> Int
-calculateAverageGuess previousNum combinations | trace ("-- Debug:num of guess so far: " ++ show previousNum ++ " target : " ++ (show.head) combinations ++ " remaining targets: " ++ (show.length) combinations) False = undefined
-calculateAverageGuess previousNum combinations
-	                | length combinations == 1  = (previousNum + (loop (head combinations) guess other 1))
-	                | otherwise                 = calculateAverageGuess (previousNum + (loop (head combinations) guess other 1)) (drop 1 combinations)
-	            where  (guess,other) = initialGuess 
-
-
+loop :: [String] -> [String] -> MusicMind.GameState -> Int -> IO ()
+loop target guess other guesses = do
+  putStrLn $ "Your guess " ++ show guesses ++ ":  " ++ show guess
+  if validChord guess then do
+    let answer = response target guess
+    putStrLn $ "My answer:  " ++ show answer
+    if answer == (3,0,0) then do
+      putStrLn $ "You got it in " ++ show guesses ++ " guesses!"
+      else do
+      let (guess',other') = nextGuess (guess,other) answer
+      loop target guess' other' (guesses+1)
+    else do
+    putStrLn "Invalid guess"
+    exitFailure
